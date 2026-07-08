@@ -48,20 +48,24 @@
   /* ---------- Mobile menu ---------- */
   var menuToggle = document.getElementById("menuToggle");
   var nav = document.getElementById("mainNav");
+  var navClose = document.getElementById("navClose");
+  var navBackdrop = document.getElementById("navBackdrop");
 
-  function closeMenu() {
-    nav.classList.remove("is-open");
-    menuToggle.classList.remove("is-open");
-    menuToggle.setAttribute("aria-expanded", "false");
-    menuToggle.setAttribute("aria-label", "Open menu");
-  }
-
-  menuToggle.addEventListener("click", function () {
-    var open = nav.classList.toggle("is-open");
+  function setMenu(open) {
+    nav.classList.toggle("is-open", open);
     menuToggle.classList.toggle("is-open", open);
+    navBackdrop.classList.toggle("is-open", open);
     menuToggle.setAttribute("aria-expanded", String(open));
     menuToggle.setAttribute("aria-label", open ? "Close menu" : "Open menu");
+    document.body.style.overflow = open ? "hidden" : "";
+  }
+  function closeMenu() { setMenu(false); }
+
+  menuToggle.addEventListener("click", function () {
+    setMenu(!nav.classList.contains("is-open"));
   });
+  navClose.addEventListener("click", closeMenu);
+  navBackdrop.addEventListener("click", closeMenu);
 
   nav.addEventListener("click", function (e) {
     if (e.target.closest("a")) closeMenu();
