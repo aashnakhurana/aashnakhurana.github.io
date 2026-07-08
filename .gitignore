@@ -1,0 +1,6 @@
+# Private source material — NEVER publish (unpublished manuscripts, dissertation, scanned chapters)
+Assets/
+
+# Local tooling
+.claude/
+.DS_Store
