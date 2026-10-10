@@ -10,7 +10,7 @@ A fully static, dependency-free site: plain HTML + CSS + vanilla JS. No build st
 index.html        the whole site (single page)
 css/style.css     theme (light default + dark toggle), layout, animations
 js/main.js        theme persistence, mobile nav, scroll reveals, tabs, counters
-media/            headshot + downloadable CV (the only published assets)
+media/            headshot + CV (opens in a new tab) (the only published assets)
 Assets/           PRIVATE source material — git-ignored, never published
 ```
 
