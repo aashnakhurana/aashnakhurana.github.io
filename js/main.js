@@ -140,6 +140,100 @@
     sections.forEach(function (sec) { spyObs.observe(sec); });
   }
 
+  /* ---------- Research journey slider ---------- */
+  var track = document.getElementById("journeyTrack");
+  if (track) {
+    var cards = Array.prototype.slice.call(track.querySelectorAll(".journey-card"));
+    var stops = Array.prototype.slice.call(document.querySelectorAll("#journeyRail .rail-stop"));
+    var prevBtn = document.getElementById("journeyPrev");
+    var nextBtn = document.getElementById("journeyNext");
+    var countEl = document.getElementById("journeyCount");
+    var current = -1;
+
+    function pad(n) { return (n < 10 ? "0" : "") + n; }
+
+    function setCurrent(i) {
+      if (i === current) return;
+      current = i;
+      cards.forEach(function (c, k) { c.classList.toggle("is-current", k === i); });
+      stops.forEach(function (s, k) {
+        s.classList.toggle("is-active", k === i);
+        s.setAttribute("aria-selected", String(k === i));
+      });
+      prevBtn.disabled = i === 0;
+      nextBtn.disabled = i === cards.length - 1;
+      countEl.textContent = pad(i + 1) + " / " + pad(cards.length);
+    }
+
+    // The card whose left edge is closest to the track's left edge is current;
+    // at the far end of the scroll, the last card is (it can't reach the left edge).
+    function syncFromScroll() {
+      var max = track.scrollWidth - track.clientWidth;
+      if (track.scrollLeft >= max - 4) { setCurrent(cards.length - 1); return; }
+      var base = track.getBoundingClientRect().left;
+      var best = 0, bestDist = Infinity;
+      cards.forEach(function (c, k) {
+        var d = Math.abs(c.getBoundingClientRect().left - base);
+        if (d < bestDist) { bestDist = d; best = k; }
+      });
+      setCurrent(best);
+    }
+
+    function goTo(i) {
+      i = Math.max(0, Math.min(cards.length - 1, i));
+      track.scrollTo({ left: cards[i].offsetLeft - cards[0].offsetLeft, behavior: reduceMotion ? "auto" : "smooth" });
+      setCurrent(i);
+    }
+
+    var scrollTicking = false;
+    track.addEventListener("scroll", function () {
+      if (!scrollTicking) {
+        scrollTicking = true;
+        window.requestAnimationFrame(function () { scrollTicking = false; syncFromScroll(); });
+      }
+    }, { passive: true });
+
+    prevBtn.addEventListener("click", function () { goTo(current - 1); });
+    nextBtn.addEventListener("click", function () { goTo(current + 1); });
+    stops.forEach(function (s, k) { s.addEventListener("click", function () { goTo(k); }); });
+
+    track.addEventListener("keydown", function (e) {
+      if (e.key === "ArrowRight") { e.preventDefault(); goTo(current + 1); }
+      else if (e.key === "ArrowLeft") { e.preventDefault(); goTo(current - 1); }
+    });
+
+    // Mouse drag (touch and trackpads swipe natively via overflow scrolling)
+    var dragX = 0, dragStart = 0, dragFrom = 0, dragging = false, dragMoved = false;
+    track.addEventListener("pointerdown", function (e) {
+      if (e.pointerType !== "mouse" || e.button !== 0) return;
+      dragging = true; dragMoved = false;
+      dragX = e.clientX; dragStart = track.scrollLeft; dragFrom = current;
+    });
+    window.addEventListener("pointermove", function (e) {
+      if (!dragging) return;
+      var dx = e.clientX - dragX;
+      if (!dragMoved && Math.abs(dx) > 5) { dragMoved = true; track.classList.add("is-dragging"); }
+      if (dragMoved) track.scrollLeft = dragStart - dx;
+    });
+    window.addEventListener("pointerup", function (e) {
+      if (!dragging) return;
+      dragging = false;
+      if (!dragMoved) return;
+      track.classList.remove("is-dragging");
+      var dx = e.clientX - dragX;
+      // Snap in the direction of the drag once it passes a small threshold
+      if (dx < -40) goTo(Math.max(current, dragFrom + 1));
+      else if (dx > 40) goTo(Math.min(current, dragFrom - 1));
+      else goTo(dragFrom);
+    });
+    // Swallow the click that ends a drag so links inside cards don't fire
+    track.addEventListener("click", function (e) {
+      if (dragMoved) { e.preventDefault(); e.stopPropagation(); dragMoved = false; }
+    }, true);
+
+    setCurrent(0);
+  }
+
   /* ---------- Publication tabs ---------- */
   var tabs = document.querySelectorAll(".pub-tab");
   var pubEntries = document.querySelectorAll("#pubList [data-cat]");
@@ -166,6 +260,79 @@
         }
       });
     });
+  });
+
+  /* ---------- Podcast player ---------- */
+  document.querySelectorAll("[data-podcast]").forEach(function (player) {
+    var audio = player.querySelector("audio");
+    var playBtn = player.querySelector(".podcast-play");
+    var seek = player.querySelector(".podcast-seek");
+    var curEl = player.querySelector("[data-current]");
+    var durEl = player.querySelector("[data-duration]");
+    var rateBtns = player.querySelectorAll("[data-rate]");
+    var seeking = false;
+
+    function fmt(t) {
+      t = Math.max(0, Math.floor(t || 0));
+      var m = Math.floor(t / 60), sec = t % 60;
+      return m + ":" + (sec < 10 ? "0" : "") + sec;
+    }
+    function paint() {
+      var max = parseFloat(seek.max) || 1;
+      seek.style.setProperty("--progress", (seek.value / max) * 100 + "%");
+    }
+
+    audio.addEventListener("loadedmetadata", function () {
+      if (isFinite(audio.duration)) {
+        seek.max = Math.floor(audio.duration);
+        durEl.textContent = fmt(audio.duration);
+      }
+      paint();
+    });
+    audio.addEventListener("timeupdate", function () {
+      if (seeking) return;
+      seek.value = Math.floor(audio.currentTime);
+      curEl.textContent = fmt(audio.currentTime);
+      paint();
+    });
+    audio.addEventListener("play", function () {
+      player.classList.add("is-playing");
+      playBtn.setAttribute("aria-label", "Pause podcast");
+    });
+    audio.addEventListener("pause", function () {
+      player.classList.remove("is-playing");
+      playBtn.setAttribute("aria-label", "Play podcast");
+    });
+    audio.addEventListener("ended", function () { audio.currentTime = 0; });
+
+    playBtn.addEventListener("click", function () {
+      if (audio.paused) audio.play(); else audio.pause();
+    });
+    seek.addEventListener("input", function () {
+      seeking = true;
+      curEl.textContent = fmt(seek.value);
+      paint();
+    });
+    seek.addEventListener("change", function () {
+      audio.currentTime = parseFloat(seek.value);
+      seeking = false;
+    });
+    player.querySelectorAll("[data-skip]").forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        var t = audio.currentTime + parseFloat(btn.getAttribute("data-skip"));
+        audio.currentTime = Math.max(0, Math.min(t, audio.duration || t));
+      });
+    });
+    rateBtns.forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        audio.playbackRate = parseFloat(btn.getAttribute("data-rate"));
+        rateBtns.forEach(function (b) {
+          b.classList.toggle("is-active", b === btn);
+          b.setAttribute("aria-pressed", String(b === btn));
+        });
+      });
+    });
+    paint();
   });
 
   /* ---------- Animated counters ---------- */
