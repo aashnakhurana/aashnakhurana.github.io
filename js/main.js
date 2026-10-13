@@ -32,14 +32,18 @@
     switching++;
     html.classList.add("theme-switching");
     if (!reduceMotion && typeof document.startViewTransition === "function") {
-      document.startViewTransition(swap).finished.then(done, done);
+      // Wait two frames after the fade so the browser re-applies :hover first
+      document.startViewTransition(swap).finished.then(doneSoon, doneSoon);
     } else {
       swap();
-      window.requestAnimationFrame(function () { window.requestAnimationFrame(done); });
+      doneSoon();
     }
     // A quick second tap starts a new switch before the first finishes; keep the
     // class until the last one is done
     function done() { if (--switching === 0) html.classList.remove("theme-switching"); }
+    function doneSoon() {
+      window.requestAnimationFrame(function () { window.requestAnimationFrame(done); });
+    }
   });
 
   /* ---------- Header state on scroll ---------- */
