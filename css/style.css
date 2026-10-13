@@ -82,7 +82,6 @@ body {
   line-height: 1.7;
   color: var(--text);
   background: var(--bg);
-  transition: background-color 0.45s ease, color 0.45s ease;
   overflow-x: hidden;
 }
 html { overflow-x: hidden; }
@@ -110,7 +109,6 @@ h1, h2, h3, h4 {
   font-weight: 550;
   line-height: 1.15;
   color: var(--text-strong);
-  transition: color 0.45s ease;
 }
 
 button { font-family: inherit; cursor: pointer; }
@@ -127,7 +125,7 @@ button { font-family: inherit; cursor: pointer; }
 .container { width: min(1120px, 92vw); margin-inline: auto; }
 
 .section { padding: clamp(2.25rem, 4.5vw, 3.75rem) 0; position: relative; }
-.section-alt { background: var(--bg-alt); transition: background-color 0.45s ease; }
+.section-alt { background: var(--bg-alt); }
 
 .section-head { margin-bottom: clamp(1.3rem, 3vw, 2rem); }
 
@@ -191,7 +189,6 @@ button { font-family: inherit; cursor: pointer; }
   font-family: "Ms Madi", cursive;
   font-size: 1.85rem;
   color: var(--text-strong);
-  transition: color 0.45s ease;
   white-space: nowrap;
 }
 .logo-flourish { width: 108px; height: 8px; color: var(--gold); margin-top: -2px; margin-left: 6px; }
@@ -234,7 +231,7 @@ button { font-family: inherit; cursor: pointer; }
   position: relative; width: 42px; height: 42px; border-radius: 50%;
   border: 1px solid var(--line); background: var(--surface);
   color: var(--text); display: grid; place-items: center;
-  transition: background-color 0.45s ease, border-color 0.45s ease, transform 0.25s ease, color 0.45s ease;
+  transition: transform 0.25s ease;
   overflow: hidden;
 }
 .theme-toggle:hover { transform: rotate(15deg) scale(1.06); border-color: var(--gold); }
@@ -245,7 +242,7 @@ html[data-theme="dark"] .icon-sun { opacity: 0; transform: rotate(90deg) scale(0
 html[data-theme="dark"] .icon-moon { opacity: 1; transform: rotate(0) scale(1); }
 
 /* Hamburger */
-.menu-toggle { display: none; width: 42px; height: 42px; border-radius: 10px; border: 1px solid var(--line); background: var(--surface); flex-direction: column; align-items: center; justify-content: center; gap: 5px; transition: background-color 0.45s ease, border-color 0.45s ease; }
+.menu-toggle { display: none; width: 42px; height: 42px; border-radius: 10px; border: 1px solid var(--line); background: var(--surface); flex-direction: column; align-items: center; justify-content: center; gap: 5px; }
 .menu-toggle span { display: block; width: 18px; height: 2px; border-radius: 2px; background: var(--text); transition: transform 0.3s ease, opacity 0.3s ease; }
 .menu-toggle.is-open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
 .menu-toggle.is-open span:nth-child(2) { opacity: 0; }
@@ -352,11 +349,10 @@ html[data-theme="dark"] .icon-moon { opacity: 1; transform: rotate(0) scale(1); 
   overflow: hidden;
   box-shadow: var(--shadow-lg);
   border: 5px solid var(--surface);
-  transition: border-color 0.45s ease;
 }
 .portrait-arch img { width: 100%; height: 100%; object-fit: cover; object-position: top; transform: scale(1.02); }
 /* Dark theme swaps in the evening edit of the same photo, cross-fading over the day one */
-.portrait-arch .portrait-night { position: absolute; inset: 0; opacity: 0; transition: opacity 0.45s ease; }
+.portrait-arch .portrait-night { position: absolute; inset: 0; opacity: 0; }
 html[data-theme="dark"] .portrait-arch .portrait-night { opacity: 1; }
 
 .portrait-caption {
@@ -411,7 +407,6 @@ html[data-theme="dark"] .portrait-arch .portrait-night { opacity: 1; }
   background: var(--surface); border: 1px solid var(--line-soft);
   border-radius: 18px; padding: 1.6rem 1.7rem;
   box-shadow: var(--shadow-sm);
-  transition: background-color 0.45s ease, border-color 0.45s ease;
 }
 .side-card h3 {
   font-size: 1.05rem; margin-bottom: 1rem;
@@ -425,7 +420,7 @@ html[data-theme="dark"] .portrait-arch .portrait-night { opacity: 1; }
   padding: 0.4rem 0.85rem; border-radius: 999px;
   background: var(--maroon-soft); color: var(--maroon);
   border: 1px solid transparent;
-  transition: border-color 0.25s ease, transform 0.25s ease, background-color 0.45s ease, color 0.45s ease;
+  transition: border-color 0.25s ease, transform 0.25s ease;
 }
 .chip-list li:hover { border-color: var(--maroon); transform: translateY(-2px); }
 
@@ -494,7 +489,7 @@ html[data-theme="dark"] .portrait-arch .portrait-night { opacity: 1; }
   border-radius: 18px; padding: 1.6rem 1.8rem 1.5rem;
   box-shadow: var(--shadow-sm);
   opacity: 0.55; transform: scale(0.97);
-  transition: opacity 0.4s ease, transform 0.4s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.4s ease, background-color 0.45s ease, border-color 0.45s ease;
+  transition: opacity 0.4s ease, transform 0.4s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.4s ease;
 }
 .journey-card.is-current { opacity: 1; transform: none; box-shadow: var(--shadow-md); border-color: var(--line); }
 .journey-date { font-size: 0.86rem; font-weight: 700; letter-spacing: 0.1em; color: var(--gold); text-transform: uppercase; }
@@ -513,7 +508,6 @@ html[data-theme="dark"] .portrait-arch .portrait-night { opacity: 1; }
   padding: clamp(1.4rem, 3vw, 2rem) clamp(1.4rem, 3vw, 2.2rem);
   background: var(--surface); border: 1px solid var(--line-soft); border-left: 3px solid var(--gold);
   border-radius: 18px; box-shadow: var(--shadow-sm);
-  transition: background-color 0.45s ease, border-color 0.45s ease;
 }
 .philosophy-title { font-size: 1.35rem; margin-bottom: 0.9rem; display: flex; align-items: center; gap: 0.6rem; }
 .philosophy-title::before { content: "✦"; color: var(--gold); font-size: 0.9rem; }
@@ -545,7 +539,7 @@ html[data-theme="dark"] .portrait-arch .portrait-night { opacity: 1; }
   border-radius: 14px;
   padding: 1.35rem 1.6rem 1.2rem;
   box-shadow: var(--shadow-sm);
-  transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.3s ease, border-color 0.3s ease, background-color 0.45s ease;
+  transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.3s ease, border-color 0.3s ease;
 }
 .pub-item:hover { transform: translateX(6px); box-shadow: var(--shadow-md); border-left-color: var(--maroon); }
 .pub-item.is-entering { animation: pub-in 0.45s cubic-bezier(0.22, 1, 0.36, 1) both; }
@@ -561,7 +555,6 @@ html[data-theme="dark"] .portrait-arch .portrait-night { opacity: 1; }
   font-size: 0.74rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase;
   padding: 0.28rem 0.7rem; border-radius: 999px;
   background: var(--gold-soft); color: var(--gold);
-  transition: background-color 0.45s ease, color 0.45s ease;
 }
 .badge-press { background: var(--maroon-soft); color: var(--maroon); }
 .badge-oa { background: rgba(46, 125, 78, 0.12); color: #2e7d4e; }
@@ -645,7 +638,7 @@ html[data-theme="dark"] .badge-oa { background: rgba(112, 200, 146, 0.14); color
   border-radius: 18px; padding: 1.7rem 1.8rem;
   box-shadow: var(--shadow-sm);
   position: relative; overflow: hidden;
-  transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.35s ease, background-color 0.45s ease, border-color 0.45s ease;
+  transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.35s ease;
 }
 .teach-card::before {
   content: ""; position: absolute; top: 0; left: 0; right: 0; height: 3px;
@@ -670,7 +663,7 @@ html[data-theme="dark"] .badge-oa { background: rgba(112, 200, 146, 0.14); color
   border-radius: 18px; padding: 1.6rem 1.7rem;
   box-shadow: var(--shadow-sm);
   position: relative;
-  transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.35s ease, background-color 0.45s ease, border-color 0.35s ease;
+  transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.35s ease, border-color 0.35s ease;
 }
 .award-card:hover { transform: translateY(-6px); box-shadow: var(--shadow-md); border-color: var(--gold); }
 
@@ -767,7 +760,6 @@ a.org { cursor: pointer; }
 .section-contact {
   background: var(--contact-bg);
   overflow: hidden;
-  transition: background-color 0.45s ease;
 }
 .contact-mesh { filter: blur(80px); }
 .contact-mesh .blob-1 { width: 42vw; height: 42vw; min-width: 320px; min-height: 320px; left: -10%; top: -20%; background: rgba(201, 162, 39, 0.22); animation: drift-1 30s ease-in-out infinite alternate; }
@@ -811,7 +803,7 @@ a.org { cursor: pointer; }
 
 /* ---------- Footer ---------- */
 
-.site-footer { background: var(--bg); padding: 2.6rem 0; transition: background-color 0.45s ease; }
+.site-footer { background: var(--bg); padding: 2.6rem 0; }
 .footer-inner { display: flex; flex-direction: column; align-items: center; gap: 0.5rem; text-align: center; }
 .footer-script { font-family: "Ms Madi", cursive; font-size: 1.7rem; color: var(--maroon); }
 .footer-inner p { font-size: 0.86rem; color: var(--muted); }
@@ -871,12 +863,12 @@ a.org { cursor: pointer; }
     background: var(--surface);
     box-shadow: var(--shadow-lg);
     clip-path: inset(0 0 0 100%);
-    transition: clip-path 0.45s cubic-bezier(0.22, 1, 0.36, 1), background-color 0.45s ease, visibility 0s linear 0.45s;
+    transition: clip-path 0.45s cubic-bezier(0.22, 1, 0.36, 1), visibility 0s linear 0.45s;
     visibility: hidden;
   }
   .main-nav.is-open {
     clip-path: inset(0 0 0 -60px); visibility: visible; z-index: 99;
-    transition: clip-path 0.45s cubic-bezier(0.22, 1, 0.36, 1), background-color 0.45s ease, visibility 0s;
+    transition: clip-path 0.45s cubic-bezier(0.22, 1, 0.36, 1), visibility 0s;
   }
   /* backdrop-filter would turn the fixed nav's containing block into the
      header and clip the slide-out panel — use a solid header on mobile */
@@ -929,7 +921,12 @@ a.org { cursor: pointer; }
   .hero-title { font-size: 2.15rem; }
 }
 
-/* Theme-transition helper: applied briefly on toggle so *everything* eases */
-html.theme-easing, html.theme-easing *, html.theme-easing *::before, html.theme-easing *::after {
-  transition: background-color 0.45s ease, color 0.45s ease, border-color 0.45s ease, box-shadow 0.45s ease, fill 0.45s ease, stroke 0.45s ease !important;
-}
+/* Theme switch: the browser cross-fades a snapshot of the old theme into the new one,
+   so photo, colors and backgrounds change together as one composited fade (see main.js) */
+::view-transition-old(root),
+::view-transition-new(root) { animation-duration: 0.4s; animation-timing-function: ease; }
+/* While switching, elements jump straight to their new colors inside the snapshot;
+   the toggle icon keeps its own spin */
+html.theme-switching *:not(.theme-toggle svg),
+html.theme-switching *::before,
+html.theme-switching *::after { transition: none !important; }

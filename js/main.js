@@ -20,13 +20,26 @@
   try { stored = localStorage.getItem("ak-theme"); } catch (e) {}
   applyTheme(stored === "dark" ? "dark" : "light");
 
+  var switching = 0;
   toggle.addEventListener("click", function () {
     var next = html.getAttribute("data-theme") === "dark" ? "light" : "dark";
-    // Ease every element's colors during the switch
-    html.classList.add("theme-easing");
-    applyTheme(next);
-    try { localStorage.setItem("ak-theme", next); } catch (e) {}
-    window.setTimeout(function () { html.classList.remove("theme-easing"); }, 500);
+    function swap() {
+      applyTheme(next);
+      try { localStorage.setItem("ak-theme", next); } catch (e) {}
+    }
+    // Elements switch colors instantly; the cross-fade (when supported) is done by the
+    // browser on whole-page snapshots, so photo, colors and backgrounds stay in sync.
+    switching++;
+    html.classList.add("theme-switching");
+    if (!reduceMotion && typeof document.startViewTransition === "function") {
+      document.startViewTransition(swap).finished.then(done, done);
+    } else {
+      swap();
+      window.requestAnimationFrame(function () { window.requestAnimationFrame(done); });
+    }
+    // A quick second tap starts a new switch before the first finishes; keep the
+    // class until the last one is done
+    function done() { if (--switching === 0) html.classList.remove("theme-switching"); }
   });
 
   /* ---------- Header state on scroll ---------- */
