@@ -85,6 +85,10 @@ body {
   transition: background-color 0.45s ease, color 0.45s ease;
   overflow-x: hidden;
 }
+html { overflow-x: hidden; }
+@supports (overflow: clip) {
+  html, body { overflow-x: clip; }
+}
 
 img { max-width: 100%; display: block; }
 
@@ -709,18 +713,22 @@ a.org { cursor: pointer; }
   font-family: "Hanken Grotesk", sans-serif; font-size: 0.82rem; font-weight: 600; line-height: 1.4;
   text-align: center; white-space: normal;
   box-shadow: var(--shadow-md);
-  opacity: 0; visibility: hidden; pointer-events: none;
-  transform: translate(-50%, 4px);
-  transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s;
+  pointer-events: none;
+  transform: translate(-50%, 0);
+  display: none;
+  animation: tip-in 0.2s ease both;
 }
 .org[data-full]::before {
   content: ""; position: absolute; left: 50%; bottom: calc(100% + 4px); z-index: 20;
   border: 6px solid transparent; border-top-color: var(--text-strong); border-bottom: 0;
-  opacity: 0; visibility: hidden; transform: translateX(-50%);
-  transition: opacity 0.2s ease, visibility 0.2s;
+  transform: translateX(-50%);
+  display: none;
+  animation: tip-fade 0.2s ease both;
 }
-.org[data-full]:hover::after, .org[data-full]:focus-visible::after { opacity: 1; visibility: visible; transform: translate(-50%, 0); }
-.org[data-full]:hover::before, .org[data-full]:focus-visible::before { opacity: 1; visibility: visible; }
+.org[data-full]:hover::after, .org[data-full]:focus-visible::after,
+.org[data-full]:hover::before, .org[data-full]:focus-visible::before { display: block; }
+@keyframes tip-in { from { opacity: 0; transform: translate(-50%, 4px); } to { opacity: 1; transform: translate(-50%, 0); } }
+@keyframes tip-fade { from { opacity: 0; } to { opacity: 1; } }
 .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
 .org-sep { color: var(--gold); font-size: 0.8rem; }
 
@@ -859,11 +867,14 @@ a.org { cursor: pointer; }
     padding: 5.5rem 2.2rem 2.5rem;
     background: var(--surface);
     box-shadow: var(--shadow-lg);
-    transform: translateX(105%);
-    transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1), background-color 0.45s ease;
+    clip-path: inset(0 0 0 100%);
+    transition: clip-path 0.45s cubic-bezier(0.22, 1, 0.36, 1), background-color 0.45s ease, visibility 0s linear 0.45s;
     visibility: hidden;
   }
-  .main-nav.is-open { transform: none; visibility: visible; z-index: 99; }
+  .main-nav.is-open {
+    clip-path: inset(0 0 0 -60px); visibility: visible; z-index: 99;
+    transition: clip-path 0.45s cubic-bezier(0.22, 1, 0.36, 1), background-color 0.45s ease, visibility 0s;
+  }
   /* backdrop-filter would turn the fixed nav's containing block into the
      header and clip the slide-out panel — use a solid header on mobile */
   .site-header.is-scrolled,
